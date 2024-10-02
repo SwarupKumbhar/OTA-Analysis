@@ -4,11 +4,15 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import seaborn as sns
+
 df = pd.read_csv(r'C:\Users\swaru\Downloads\python_test_dataset_flights_6months.csv')
+
 df.shape
 df.head()
+
 # Summary statistics
 df.describe()
+
 # Convert booking_date  to datetime
 df['booking_date'] = pd.to_datetime(df['booking_date'])
 
@@ -27,6 +31,7 @@ plt.ylabel('Number of Bookings')
 plt.xticks(rotation=90)
 plt.tight_layout()
 plt.show()
+
 # Visualize top 10 buyers
 plt.figure(figsize=(10, 6))
 sns.barplot(x='buyer_id', y='bookings', data=buyer_performance.head(10))
@@ -36,9 +41,11 @@ plt.ylabel('Number of Bookings')
 plt.xticks(rotation=90)
 plt.tight_layout()
 plt.show()
+
 ### Observation 2: Seasonal or Time-Based Trends ###
 # Assuming 'booking_date' is in the dataset, convert to datetime
 df['booking_date'] = pd.to_datetime(df['booking_date'])
+
 # Extract month and visualize trends
 df['month'] = df['booking_date'].dt.month
 monthly_trends = df.groupby('month').size().reset_index(name='bookings')
@@ -51,6 +58,7 @@ plt.xlabel('Month')
 plt.ylabel('Number of Bookings')
 plt.tight_layout()
 plt.show()
+
 # Correlation Analysis
 correlation = df[['costprice', 'markup', 'selling_price', 'refund_amount']].corr()
 # Comparative Analysis of Suppliers
@@ -65,6 +73,7 @@ plt.ylabel('Total Revenue')
 plt.show()
 
 ### Short-term observations ###
+
 # 1. Observation 1: Recent spike or drop in the number of bookings
 df['booking_week'] = df['booking_date'].dt.to_period('W').apply(lambda r: r.start_time)  # Group by week
 weekly_bookings = df['booking_week'].value_counts().sort_index()
@@ -83,6 +92,7 @@ if booking_change > 0:
     print(f"Short-term observation 1: Bookings have increased by {booking_change} in the last week.")
 else:
     print(f"Short-term observation 1: Bookings have decreased by {abs(booking_change)} in the last week.")
+    
 # 2. Observation 2: Recent increase in total revenue (selling price)
 weekly_revenue = df.groupby('booking_week')['selling_price'].sum()
 # Plot for weekly revenue trend
@@ -100,6 +110,7 @@ if revenue_change > 0:
     print(f"Short-term observation 2: Revenue has increased by {revenue_change:.2f} in the last week.")
 else:
     print(f"Short-term observation 2: Revenue has decreased by {abs(revenue_change):.2f} in the last week.")
+
 # 3. Observation 3: Recent trends in refunds (refund_amount)
 weekly_refunds = df.groupby('booking_week')['refund_amount'].sum()
 # Plot for weekly refund trend
@@ -117,9 +128,11 @@ if refund_change > 0:
     print(f"Short-term observation 3: Refunds have increased by {refund_change:.2f} in the last week.")
 else:
     print(f"Short-term observation 3: Refunds have decreased by {abs(refund_change):.2f} in the last week.")
+
 ### Long-term observations ###
 # Extract Year-Month for long-term analysis
 df['year_month'] = df['booking_date'].dt.to_period('M')
+
 # 1. Observation 1: Long-term trend in revenue (selling price) over time
 monthly_revenue = df.groupby('year_month')['selling_price'].sum()
 # Plotting the long-term revenue trend
